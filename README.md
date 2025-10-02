@@ -1,4 +1,4 @@
-# Biomedical QA with LoRA Fine-tuning on MedQuAD Dataset
+# LoRA: Low Rank Adaptation of Large Language Models
 
 ## Abstract
 
@@ -15,8 +15,8 @@ This project implements and extends the Low-Rank Adaptation (LoRA) method for ef
 ├── methodology.md
 ├── results.md
 ├── references.md
-└── writeup.pdf
-├── datasets/
+├── writeup.pdf
+└── datasets/
     └── medquad.csv
 ```
 
