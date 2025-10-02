@@ -5,22 +5,22 @@
 ### Code Repository
 
 - **GitHub Repository**: [LoRA-from-scratch](https://github.com/attharvkjain/LoRA-from-scratch)
-The main codebase containing our implementation of LoRA from scratch, training scripts, and evaluation code for biomedical question answering.
+> The main codebase containing our implementation of LoRA from scratch, training scripts, and evaluation code for biomedical question answering.
 
 ### Base Model
 
 - **GPT-2 Model**: [openai-community/gpt2](https://huggingface.co/openai-community/gpt2)
-Pre-trained GPT-2 model from Hugging Face used as our base language model for LoRA fine-tuning on medical question answering tasks.
+> Pre-trained GPT-2 model from Hugging Face used as our base language model for LoRA fine-tuning on medical question answering tasks.
 
 ### Dataset
 
 - **MedQuAD Dataset**: [Medical Question Answer for AI Research](https://www.kaggle.com/datasets/pythonafroz/medquad-medical-question-answer-for-ai-research)
-The primary dataset containing 47,457 medical question-answer pairs from authoritative NIH sources, covering diseases, drugs, medical procedures, and healthcare topics.
+> The primary dataset containing 14,984 medical question-answer pairs from authoritative NIH sources, covering diseases, drugs, medical procedures, and healthcare topics.
 
 ### Research Paper
 
 - **LoRA Original Paper**: [LoRA: Low-Rank Adaptation of Large Language Models](https://arxiv.org/pdf/2106.09685)
-The foundational research paper by Hu et al. (2021) that introduced the Low-Rank Adaptation method for efficient fine-tuning of large language models.
+> The foundational research paper by Hu et al. (2021) that introduced the Low-Rank Adaptation method for efficient fine-tuning of large language models.
 
 ## Supporting Libraries and Frameworks
 
