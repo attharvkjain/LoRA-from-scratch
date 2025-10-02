@@ -153,8 +153,8 @@ The LoRA layers are selectively applied to the query and value projection matric
 
 ### 8.1 Code Structure
 
-- [**LoRA.py**](http://lora.py/): Custom LoRA layer implementation
-- [**implementation.py**](http://implementation.py/): Training, evaluation, and inference pipeline
+- **LoRA.py**: Custom LoRA layer implementation
+- **implementation.py**: Training, evaluation, and inference pipeline
 - **Modular Design**: Separated concerns for reusability
 
 ### 8.2 Reproducibility
