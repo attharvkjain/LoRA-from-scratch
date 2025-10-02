@@ -5,13 +5,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class LoRALinear(nn.Module):
-    """
-    Barebones LoRA for nn.Linear:
-    - Wraps an existing nn.Linear (or takes in/out dims)
-    - Freezes the original weight (keeps it as a buffer/parameter with requires_grad=False)
-    - Adds low-rank matrices A (r x in) and B (out x r)
-    - During forward: out = base_linear(x) + (dropout(x) @ A.T @ B.T) * scaling
-    """
     def __init__(self, original_linear: nn.Linear = None, in_features: int = None, out_features: int = None,
                  r: int = 4, lora_alpha: int = 1, lora_dropout: float = 0.0, bias: bool = True):
         super().__init__()
@@ -35,11 +28,9 @@ class LoRALinear(nn.Module):
         if original_linear is not None:
             self.weight = nn.Parameter(original_linear.weight.data.clone(), requires_grad=False)
         else:
-            # If no original provided, initialize normally but frozen
             self.weight = nn.Parameter(torch.empty(out_features, in_features), requires_grad=False)
             nn.init.kaiming_uniform_(self.weight, a=math.sqrt(5))
 
-        # Bias: use original bias if present
         if bias_tensor is not None:
             self.bias = nn.Parameter(bias_tensor.clone(), requires_grad=False)
         else:
@@ -47,14 +38,11 @@ class LoRALinear(nn.Module):
 
         # LoRA paramaters
         if r > 0:
-            # A shape: (r, in_features)
             self.lora_A = nn.Parameter(torch.zeros((r, in_features)))
-            # B shape: (out_features, r)
             self.lora_B = nn.Parameter(torch.zeros((out_features, r)))
             # dropout
             self.lora_dropout = nn.Dropout(p=lora_dropout) if lora_dropout > 0 else nn.Identity()
 
-            # Initialization: follow typical LoRA init (A kaiming, B zeros)
             nn.init.kaiming_uniform_(self.lora_A, a=math.sqrt(5))
             nn.init.zeros_(self.lora_B)
         else:
@@ -103,15 +91,12 @@ def replace_linear_with_lora(model: nn.Module, r: int = 4, lora_alpha: int = 16,
     return replaced
 
 def lora_parameters(model: nn.Module):
-    """Yield only LoRA parameters (A and B) from model for optimizer."""
     for n, p in model.named_parameters():
         if ('lora_A' in n) or ('lora_B' in n):
             yield p
 
 def save_lora_state_dict(model: nn.Module, save_path: str):
-    """
-    Save only LoRA parameters to a file (state_dict).
-    """
+
     lora_state = {k: v.cpu() for k, v in model.state_dict().items() if ('lora_A' in k or 'lora_B' in k)}
     torch.save(lora_state, save_path)
 

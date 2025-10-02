@@ -7,6 +7,8 @@ from transformers import AutoTokenizer, AutoModelForCausalLM, get_linear_schedul
 import torch.optim as optim
 from tqdm.auto import tqdm
 
+from eval_utils import evaluate_metrics
+
 # importing LoRA utilities
 from lora import replace_linear_with_lora, lora_parameters, save_lora_state_dict
 
@@ -117,3 +119,12 @@ for epoch in range(EPOCHS):
     print(f"Saved LoRA state to {save_path}")
 
 print("Training complete.")
+
+subset_df = df.head(10)
+references = subset_df['answer'].tolist()
+
+metrics, predictions = evaluate_metrics(model, tokenizer, references, device=DEVICE)
+
+print("Evaluation on LoRA fine-tuned GPT-2:")
+for k, v in metrics.items():
+    print(f"{k}: {v:.4f}")
