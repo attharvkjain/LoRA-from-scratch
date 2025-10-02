@@ -15,8 +15,8 @@ This project implements and extends the Low-Rank Adaptation (LoRA) method for ef
 ├── methodology.md
 ├── results.md
 ├── references.md
-└── writeup.pdf
-├── datasets/
+├── writeup.pdf
+└── datasets/
     └── medquad.csv
 ```
 
