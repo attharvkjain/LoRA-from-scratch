@@ -2,7 +2,7 @@
 
 ## Abstract
 
-This project implements and extends the Low-Rank Adaptation (LoRA) method for efficient fine-tuning of large language models, specifically applied to biomedical question answering using the MedQuAD dataset. The MedQuAD dataset contains 47,457 medical question-answer pairs curated from authoritative NIH sources, covering specialized domains including diseases, drugs, medical procedures, and healthcare topics. We implement LoRA from scratch and demonstrate its effectiveness in adapting pre-trained language models to the complex biomedical domain while maintaining parameter efficiency.
+This project implements and extends the Low-Rank Adaptation (LoRA) method for efficient fine-tuning of large language models, specifically applied to biomedical question answering using the MedQuAD dataset. The MedQuAD dataset contains 14,984 medical question-answer pairs curated from authoritative NIH sources, covering specialized domains including diseases, drugs, medical procedures, and healthcare topics. We implement LoRA from scratch and demonstrate its effectiveness in adapting pre-trained language models to the complex biomedical domain while maintaining parameter efficiency.
 
 ## Project Structure
 
