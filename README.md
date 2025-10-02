@@ -11,6 +11,7 @@ This project implements and extends the Low-Rank Adaptation (LoRA) method for ef
 ├── requirements.txt
 ├── gpt-without-lora.py
 ├── LoRA.py
+├── LoRA.pdf
 ├── methodology.md
 ├── results.md
 ├── references.md
