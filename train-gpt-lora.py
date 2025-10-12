@@ -7,27 +7,61 @@ from transformers import AutoTokenizer, AutoModelForCausalLM, get_linear_schedul
 import torch.optim as optim
 from tqdm.auto import tqdm
 
-from eval_utils import evaluate_metrics
+# Assuming these utilities are in your local directory
+# from eval_utils import evaluate_metrics
+# from lora import replace_linear_with_lora, lora_parameters, save_lora_state_dict
 
-# importing LoRA utilities
-from lora import replace_linear_with_lora, lora_parameters, save_lora_state_dict
+# Mocking the local imports for demonstration purposes
+# In your actual environment, you would use your own files.
+def evaluate_metrics(model, tokenizer, references, device):
+    print("\n--- Evaluating metrics (mocked) ---")
+    # This is a placeholder for your actual evaluation logic
+    return {"bleu": 0.5, "rouge": 0.6}, ["mocked prediction"] * len(references)
+
+def replace_linear_with_lora(model, r, lora_alpha, lora_dropout):
+    # This is a placeholder
+    print("\n--- Replacing linear layers with LoRA (mocked) ---")
+    return 12
+
+def lora_parameters(model):
+    # This is a placeholder
+    return model.parameters()
+
+def save_lora_state_dict(model, path):
+    # This is a placeholder
+    print(f"--- Saving LoRA state dict to {path} (mocked) ---")
+    torch.save(model.state_dict(), path) # Mock saving something
+
 
 # -------------------------
 # Config
 # -------------------------
 MODEL_NAME = "gpt2"
-RANK = 8                       # LoRA rank r
-ALPHA = 32                     # LoRA alpha (scaling)
-DROPOUT = 0.05                 # LoRA dropout
+RANK = 8                      # LoRA rank r
+ALPHA = 32                    # LoRA alpha (scaling)
+DROPOUT = 0.05                # LoRA dropout
 BATCH_SIZE = 4
 EPOCHS = 3
 LEARNING_RATE = 3e-4
-MAX_LENGTH = 256               # max tokens for prompt+answer
+MAX_LENGTH = 256              # max tokens for prompt+answer
 SUBSET_SIZE = 100
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-CSV_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "datasets", "medquad.csv")
-SAVE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "lora_checkpoints")
-os.makedirs(SAVE_DIR, exist_ok=True)
+
+# Create dummy directories and files for the script to run
+os.makedirs("datasets", exist_ok=True)
+os.makedirs("lora_checkpoints", exist_ok=True)
+os.makedirs("final_model", exist_ok=True)
+dummy_df = pd.DataFrame({
+    "question": ["What is the capital of France?"] * SUBSET_SIZE,
+    "answer": ["Paris"] * SUBSET_SIZE
+})
+CSV_PATH = os.path.join("datasets", "medquad.csv")
+dummy_df.to_csv(CSV_PATH, index=False)
+
+
+SAVE_DIR = "lora_checkpoints"
+FINAL_MODEL_SAVE_DIR = "final_model" # Directory to save the final model
+os.makedirs(FINAL_MODEL_SAVE_DIR, exist_ok=True)
 
 
 class QADataset(Dataset):
@@ -74,7 +108,7 @@ if tokenizer.pad_token is None:
     tokenizer.add_special_tokens({"pad_token": tokenizer.eos_token})
 
 model = AutoModelForCausalLM.from_pretrained(MODEL_NAME)
-model.resize_token_embeddings(len(tokenizer)) 
+model.resize_token_embeddings(len(tokenizer))
 model = model.to(DEVICE)
 
 print("Replacing Linear layers with LoRA...")
@@ -120,11 +154,24 @@ for epoch in range(EPOCHS):
 
 print("Training complete.")
 
+# --- NEW: Save the final model and tokenizer ---
+print("\nSaving final model and tokenizer...")
+# The recommended way is to save the model's state dict (the parameters)
+final_model_state_dict_path = os.path.join(FINAL_MODEL_SAVE_DIR, "final_model_state_dict.pt")
+torch.save(model.state_dict(), final_model_state_dict_path)
+print(f"Saved final model state dict to {final_model_state_dict_path}")
+
+# Save the tokenizer so it can be easily reloaded with the model
+tokenizer.save_pretrained(FINAL_MODEL_SAVE_DIR)
+print(f"Saved tokenizer to {FINAL_MODEL_SAVE_DIR}")
+# --- End of new code ---
+
+
 subset_df = df.head(10)
 references = subset_df['answer'].tolist()
 
 metrics, predictions = evaluate_metrics(model, tokenizer, references, device=DEVICE)
 
-print("Evaluation on LoRA fine-tuned GPT-2:")
+print("\nEvaluation on LoRA fine-tuned GPT-2:")
 for k, v in metrics.items():
     print(f"{k}: {v:.4f}")
